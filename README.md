@@ -74,7 +74,7 @@ DSML 使用特定格式的 XML 风格标签来表示函数调用：
 
 ```env
 # DeepSeek安全扩展包配置
-AMRITA_PLUGIN_DEEPSEEK_SECURITY_INVOKE=0.65
+SECURITY_INVOKE=0.65
 ```
 
 ### 配置项说明
