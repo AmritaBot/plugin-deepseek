@@ -58,10 +58,10 @@ class Checker:
     @classmethod
     def check_by_rule(cls, text: str) -> bool:
         ts = fast_cut(text)
-        return any(
+        return any(kw in ts for kw in cls.KEYWORDS) or any(
             minhash(ts, kwset) >= CONFIG.security_invoke for kwset in KWSET._sets
         )
 
 
-KWSET = KeywordsSet(*Checker.KEYWORDS)
+KWSET = KeywordsSet()
 KWSET.build()
