@@ -57,7 +57,7 @@ DSML 使用特定格式的 XML 风格标签来表示函数调用：
 
 ### 恶意关键词检测
 
-- DSML相关标签：`<｜begin▁of▁sentence｜>`, `<｜end▁of▁sentence｜>`, `<｜tool▁call｜>`, 等
+- 模型底层推理相关标签：`<｜begin▁of▁sentence｜>`, `<｜end▁of▁sentence｜>`, `<｜tool▁call｜>`, 等
 - 提示注入关键词：`忽略之前所有指令`
 - 自定义安全关键词
 
