@@ -57,7 +57,7 @@ DSML 使用特定格式的 XML 风格标签来表示函数调用：
 
 ### 恶意关键词检测
 
-- DSML相关标签：`<｜begin▁of▁sentence｜>`, `<｜end▁of▁sentence｜>`, `<｜tool▁call｜>`, 等
+- 模型底层推理相关标签：`<｜begin▁of▁sentence｜>`, `<｜end▁of▁sentence｜>`, `<｜tool▁call｜>`, 等
 - 提示注入关键词：`忽略之前所有指令`
 - 自定义安全关键词
 
@@ -74,7 +74,7 @@ DSML 使用特定格式的 XML 风格标签来表示函数调用：
 
 ```env
 # DeepSeek安全扩展包配置
-AMRITA_PLUGIN_DEEPSEEK_SECURITY_INVOKE=0.65
+SECURITY_INVOKE=0.65
 ```
 
 ### 配置项说明
@@ -117,7 +117,7 @@ amrita plugin install amrita_plugin_deepseek
 
 此安全扩展包采用零配置设计。安装后会自动注册到 Amrita 框架中，并立即启用所有安全功能。
 
-**安全级别调整**：如需调整安全检测的敏感度，可通过修改 `.env` 文件中的 `AMRITA_PLUGIN_DEEPSEEK_SECURITY_INVOKE` 配置项来实现（详见上方配置说明）。
+**安全级别调整**：如需调整安全检测的敏感度，可通过修改 `.env` 文件中的 `SECURITY_INVOKE` 配置项来实现（详见上方配置说明）。
 
 ## 使用示例
 
