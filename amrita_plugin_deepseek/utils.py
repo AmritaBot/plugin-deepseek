@@ -52,13 +52,12 @@ class Checker:
         "<｜end▁of▁parameter｜>",
         "<｜Assistant｜>",
         "<｜User｜>",
-        *fast_cut("忽略之前所有指令"),
     )
 
     @classmethod
     def check_by_rule(cls, text: str) -> bool:
         ts = fast_cut(text)
-        return any(kw in ts for kw in cls.KEYWORDS) or any(
+        return any(kw in text for kw in cls.KEYWORDS) or any(
             minhash(ts, kwset) >= CONFIG.security_invoke for kwset in KWSET._sets
         )
 

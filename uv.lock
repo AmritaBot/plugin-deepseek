@@ -170,7 +170,7 @@ wheels = [
 
 [[package]]
 name = "amrita"
-version = "0.7.3.2"
+version = "1.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiofiles" },
@@ -193,9 +193,9 @@ dependencies = [
     { name = "watchfiles" },
     { name = "zipp" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/64/a0/93639721175be800c01fb3e3b4db4f3814a083d4d57d2ebfe0a6bca49dd2/amrita-0.7.3.2.tar.gz", hash = "sha256:b690a83f0afc59393a9d7163fe0e8315982f371082fc59fbd8624e34a9ee583e", size = 1039875, upload-time = "2026-01-29T03:35:29.494Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c7/70/df98583e3443e033d15cbf7fde1b7c16b6711c341fbecb05fc869aa00273/amrita-1.0.1.tar.gz", hash = "sha256:40ca45f7ad958227e71224b3d688e138fd7e16bf08ef4974a26aa52568e6dc01", size = 1014716, upload-time = "2026-02-18T09:30:46.028Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6e/c0/91b93ded351cf02c7a62f75941f6e0bf8dfd10e85c2a83155c3c8476718b/amrita-0.7.3.2-py3-none-any.whl", hash = "sha256:5012456cd80ab7bcd13699ee2212df6926c192a65f153bff58858878c5bc2cc9", size = 1113878, upload-time = "2026-01-29T03:35:27.437Z" },
+    { url = "https://files.pythonhosted.org/packages/48/50/0a9f8e1145d6880518dfae7a040ce1df688f1b5bf7d6910c650fb8ad5823/amrita-1.0.1-py3-none-any.whl", hash = "sha256:b39563fadee87ae61adc613f245035a5c421974205955bd27ebe080e7c4c9ee0", size = 1085847, upload-time = "2026-02-18T09:30:47.683Z" },
 ]
 
 [package.optional-dependencies]
@@ -205,6 +205,7 @@ full = [
     { name = "aiopg" },
     { name = "aiosqlite" },
     { name = "alembic" },
+    { name = "amrita-core" },
     { name = "async-lru" },
     { name = "bcrypt" },
     { name = "dotenv" },
@@ -214,6 +215,7 @@ full = [
     { name = "jinja2" },
     { name = "nonebot-adapter-onebot" },
     { name = "nonebot-plugin-orm" },
+    { name = "nonebot-plugin-uniconf" },
     { name = "nonebot2", extra = ["fastapi"] },
     { name = "openai" },
     { name = "pillow" },
@@ -225,8 +227,28 @@ full = [
 ]
 
 [[package]]
+name = "amrita-core"
+version = "0.4.3.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiofiles" },
+    { name = "aiohttp" },
+    { name = "fastmcp" },
+    { name = "filetype" },
+    { name = "jieba" },
+    { name = "loguru" },
+    { name = "openai" },
+    { name = "pydantic" },
+    { name = "pytz" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/18/d2/bde5ba0ef6a7f0ca174cbd2421f3f186e817a562c83c6c0a1b0742a832ed/amrita_core-0.4.3.2.tar.gz", hash = "sha256:d71a34471f4be4204c9aa77f26c6ff8df2e84f785f420cae63bee49493bad638", size = 55040, upload-time = "2026-02-18T07:40:24.709Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/49/ae/3a52fa832cae6210d676020fcdb180d869c822beaf963977b5f3d9ca5261/amrita_core-0.4.3.2-py3-none-any.whl", hash = "sha256:94395ba04882d15707d281acfb38f70b69a612fde6b221a59e15ba08599d4e18", size = 50240, upload-time = "2026-02-18T07:40:23.442Z" },
+]
+
+[[package]]
 name = "amrita-plugin-deepseek"
-version = "0.1.1"
+version = "0.1.2"
 source = { editable = "." }
 dependencies = [
     { name = "amrita", extra = ["full"] },
@@ -239,7 +261,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "amrita", extras = ["full"], specifier = ">=0.7.3.2" }]
+requires-dist = [{ name = "amrita", extras = ["full"], specifier = ">=1.0.1" }]
 
 [package.metadata.requires-dev]
 dev = [
@@ -876,6 +898,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/1d/65/ce7f1b70157833bf3cb851b556a37d4547ceafc158aa9b34b36782f23696/filelock-3.20.3.tar.gz", hash = "sha256:18c57ee915c7ec61cff0ecf7f0f869936c7c30191bb0cf406f1341778d0834e1", size = 19485, upload-time = "2026-01-09T17:55:05.421Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b5/36/7fb70f04bf00bc646cd5bb45aa9eddb15e19437a28b8fb2b4a5249fac770/filelock-3.20.3-py3-none-any.whl", hash = "sha256:4b0dda527ee31078689fc205ec4f1c1bf7d56cf88b6dc9426c4f230e46c2dce1", size = 16701, upload-time = "2026-01-09T17:55:04.334Z" },
+]
+
+[[package]]
+name = "filetype"
+version = "1.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/bb/29/745f7d30d47fe0f251d3ad3dc2978a23141917661998763bebb6da007eb1/filetype-1.2.0.tar.gz", hash = "sha256:66b56cd6474bf41d8c54660347d37afcc3f7d1970648de365c102ef77548aadb", size = 998020, upload-time = "2022-11-02T17:34:04.141Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/18/79/1b8fa1bb3568781e84c9200f951c735f3f157429f44be0495da55894d620/filetype-1.2.0-py2.py3-none-any.whl", hash = "sha256:7ce71b6880181241cf7ac8697a2f1eb6a8bd9b429f7ad6d27b8db9ba5f1c2d25", size = 19970, upload-time = "2022-11-02T17:34:01.425Z" },
 ]
 
 [[package]]
@@ -1783,6 +1814,23 @@ default = [
 ]
 
 [[package]]
+name = "nonebot-plugin-uniconf"
+version = "0.1.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiofiles" },
+    { name = "nonebot-plugin-localstore" },
+    { name = "nonebot2" },
+    { name = "tomli" },
+    { name = "tomli-w" },
+    { name = "watchfiles" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0c/0e/ac8f5ad9ee2105d057652c19dbd7bb5760c3f5254807a17bbbd7c100dc77/nonebot_plugin_uniconf-0.1.3.tar.gz", hash = "sha256:1191ff688316508c35ad8452f8930db3927d81a5faa294bcd4d4089ecbceaa91", size = 25597, upload-time = "2026-01-30T03:48:06.63Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d9/a7/5c99b18fe2b425a1f7f44f51936eb9577206f92cc97a90abc4273176255a/nonebot_plugin_uniconf-0.1.3-py3-none-any.whl", hash = "sha256:4527f06b7d0b588c00add48d26348072978c397820ecb41ca82dd00be3b45406", size = 23200, upload-time = "2026-01-30T03:48:08.13Z" },
+]
+
+[[package]]
 name = "nonebot2"
 version = "2.4.4"
 source = { registry = "https://pypi.org/simple" }
@@ -1831,7 +1879,7 @@ wheels = [
 
 [[package]]
 name = "openai"
-version = "1.99.0"
+version = "2.21.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -1843,9 +1891,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c5/72/3f49a3d0452019febd70fcf258743e01dc1ca43a95cc97a4b5b773d2d0a5/openai-1.99.0.tar.gz", hash = "sha256:7b985693da4dc9783394b785212bb67a65352cb6b867b1756b0e5e8321b4aba9", size = 497020, upload-time = "2025-08-05T17:02:02.834Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/92/e5/3d197a0947a166649f566706d7a4c8f7fe38f1fa7b24c9bcffe4c7591d44/openai-2.21.0.tar.gz", hash = "sha256:81b48ce4b8bbb2cc3af02047ceb19561f7b1dc0d4e52d1de7f02abfd15aa59b7", size = 644374, upload-time = "2026-02-14T00:12:01.577Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e9/18/f3fc5b111d0bc51111beb2b049571974df952a5f7f466126823124b77368/openai-1.99.0-py3-none-any.whl", hash = "sha256:9d762c299eba9b0b3a55c3905e8457520e73a7601a258b763aa046475fac2b98", size = 767800, upload-time = "2025-08-05T17:02:00.274Z" },
+    { url = "https://files.pythonhosted.org/packages/cc/56/0a89092a453bb2c676d66abee44f863e742b2110d4dbb1dbcca3f7e5fc33/openai-2.21.0-py3-none-any.whl", hash = "sha256:0bc1c775e5b1536c294eded39ee08f8407656537ccc71b1004104fe1602e267c", size = 1103065, upload-time = "2026-02-14T00:11:59.603Z" },
 ]
 
 [[package]]

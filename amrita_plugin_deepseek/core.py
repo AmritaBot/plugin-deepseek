@@ -3,11 +3,17 @@ import random
 import typing
 
 from amrita.API import send_to_admin
-from amrita.plugins.chat.API import ToolsManager, on_before_chat, on_chat
 from amrita.plugins.chat.config import config_manager
-from amrita.plugins.chat.event import ChatEvent
-from amrita.plugins.chat.utils.models import Message
+from amrita_core import (
+    CompletionEvent,
+    PreCompletionEvent,
+    ToolsManager,
+    on_completion,
+    on_precompletion,
+)
+from amrita_core.types import Message
 from nonebot import get_bot, logger
+from nonebot.adapters.onebot.v11 import MessageEvent
 
 from .dsml import (
     DSMLFunctionCall,
@@ -18,8 +24,8 @@ from .dsml import (
 from .utils import Checker
 
 
-@on_before_chat(priority=5, block=False).handle()
-async def security_check(event: ChatEvent):
+@on_precompletion(priority=5, block=False).handle()
+async def security_check(event: PreCompletionEvent, nonebot_event: MessageEvent):
     has_bad_msg = False
     with contextlib.suppress(DSMLParseError):
         if DSMLParser.parse(
@@ -43,17 +49,19 @@ async def security_check(event: ChatEvent):
     if has_bad_msg:
         with contextlib.suppress(Exception):
             await send_to_admin(
-                f"Security Alert: User query contains potentially harmful content.\nUser ID: {event.get_user_id()}\nQuery: {event.message.user_query}\nPowered by Amrita DeepSeek增强包"
+                f"Security Alert: User query contains potentially harmful content.\nUser ID: {nonebot_event.get_user_id()}\nQuery: {event.message.user_query}\nPowered by Amrita DeepSeek增强包"
             )
             await get_bot().send(
-                event.get_nonebot_event(),
-                random.choice(config_manager.config.llm_config.block_msg),
+                nonebot_event,
+                random.choice(config_manager.config.llm.block_msg),
             )
-        event._send_message.user_query.content = "[因为安全原因，此消息并没有被解析。]"
+        event.get_context_messages().user_query.content = (
+            "[因为安全原因，此消息并没有被解析。]"
+        )
 
 
-@on_chat(priority=5, block=False).handle()
-async def checker(event: ChatEvent):
+@on_completion(priority=5, block=False).handle()
+async def checker(event: CompletionEvent):
     matches: list[DSMLFunctionCall] = []
     with contextlib.suppress(DSMLParseError):
         event.model_response, matches = DSMLParser.find_and_clean(event.model_response)
@@ -83,4 +91,4 @@ async def checker(event: ChatEvent):
             results.append(f"Error running tool {tool_name}: {e}\n")
             continue
     final_result = "\n".join(results)
-    event.get_send_message().memory.append(Message(role="user", content=final_result))
+    event.get_context_messages().append(Message(role="user", content=final_result))
