@@ -6,6 +6,9 @@ class Config(BaseModel):
     security_invoke: float = Field(
         0.65,
     )
+    append_tool: bool = Field(
+        True,
+    )
 
 
 CONFIG = get_plugin_config(Config)

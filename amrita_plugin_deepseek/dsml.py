@@ -49,21 +49,24 @@ class DSMLFunctionCall(BaseModel):
 class DSMLParser:
     """DSML解析器 - 处理DeepSeek工具调用标签"""
 
-    # 编译正则表达式
+    OPEN_TAG = r"<(?:｜DSML｜|｜｜DSML｜｜)"
+    CLOSE_TAG = r"</(?:｜DSML｜|｜｜DSML｜｜)"
+
     # 匹配整个DSML块
     DSML_BLOCK_PATTERN = re.compile(
-        r"<｜DSML｜function_calls>(.*?)</｜DSML｜function_calls>",
-        re.DOTALL,  # 使.匹配换行符
+        rf"{OPEN_TAG}function_calls>(.*?){CLOSE_TAG}function_calls>",
+        re.DOTALL,
     )
 
     # 匹配单个函数调用
     INVOKE_PATTERN = re.compile(
-        r'<｜DSML｜invoke\s+name="([^"]+)">(.*?)</｜DSML｜invoke>', re.DOTALL
+        rf'{OPEN_TAG}invoke\s+name="([^"]+)">(.*?){CLOSE_TAG}invoke>',
+        re.DOTALL,
     )
 
     # 匹配参数
     PARAMETER_PATTERN = re.compile(
-        r'<｜DSML｜parameter\s+name="([^"]+)"(?:\s+([^>]*))?>(.*?)</｜DSML｜parameter>',
+        rf'{OPEN_TAG}parameter\s+name="([^"]+)"(?:\s+([^>]*))?>(.*?){CLOSE_TAG}parameter>',
         re.DOTALL,
     )
 
@@ -157,12 +160,14 @@ class DSMLParser:
             attr_value = attr_match.group(2)
             attrs[attr_name] = attr_value
 
-            if attr_name == "type" or attr_name == "string":
+            if attr_name == "type":
                 # 尝试确定参数类型
                 try:
                     param_type = ParamType(attr_value.lower())
                 except ValueError:
                     param_type = ParamType.UNKNOWN
+            elif attr_name == "string":
+                param_type = ParamType.STRING
 
         # 解析参数值
         type_str: str = attrs.get("type", attrs.get("string", "string"))
@@ -311,24 +316,25 @@ class DSMLParser:
 
 def example_print() -> None:
     # 示例文本（包含DSML和普通文本）
-    sample_text = """
+    sample_text = sample_text = """
     这是普通文本。
 
     <｜DSML｜function_calls>
     <｜DSML｜invoke name="webscraper">
     <｜DSML｜parameter name="url" string="true">https://amrita.suggar.top/docs</｜DSML｜parameter>
     <｜DSML｜parameter name="depth" type="number">2</｜DSML｜parameter>
-    <｜DSML｜parameter name="extract_links" string="true">true</｜DSML｜parameter>
     </｜DSML｜invoke>
     </｜DSML｜function_calls>
 
     更多文本内容。
 
-    <｜DSML｜function_calls>
-    <｜DSML｜invoke name="think_and_reason">
-    <｜DSML｜parameter name="content" string="true">需要分析文档结构</｜DSML｜parameter>
-    </｜DSML｜invoke>
-    </｜DSML｜function_calls>
+    <｜｜DSML｜｜function_calls>
+    <｜｜DSML｜｜invoke name="think_and_reason">
+    <｜｜DSML｜｜parameter name="content" string="true">
+    需要分析文档结构
+    </｜｜DSML｜｜parameter>
+    </｜｜DSML｜｜invoke>
+    </｜｜DSML｜｜function_calls>
     """
 
     parser = DSMLParser()

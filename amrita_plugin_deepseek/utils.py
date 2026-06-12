@@ -1,7 +1,7 @@
 from enum import Enum
 from functools import lru_cache
 
-from amrita.plugins.chat.utils.tokenizer import Tokenizer
+from amrita_core.base.tokenizer import TokenizerManager
 
 from .config import CONFIG
 
@@ -9,7 +9,8 @@ from .config import CONFIG
 @lru_cache(maxsize=2048)
 def fast_cut(text: str) -> set[str]:
     """粗略地快速分词，返回一个包含所有词语的集合"""
-    return set(Tokenizer().tokenize(text))
+    tokenzier = TokenizerManager().get_tokenizer("jieba")
+    return set(tokenzier(1200000).tokenize(text))
 
 
 def minhash(set1: set[str], set2: set[str]) -> float:
