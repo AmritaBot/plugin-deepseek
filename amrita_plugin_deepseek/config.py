@@ -7,7 +7,7 @@ class Config(BaseModel):
         0.65,
     )
     append_tool: bool = Field(
-        True,
+        False,
     )
 
 

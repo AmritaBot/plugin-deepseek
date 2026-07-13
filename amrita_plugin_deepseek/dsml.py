@@ -49,24 +49,29 @@ class DSMLFunctionCall(BaseModel):
 class DSMLParser:
     """DSML解析器 - 处理DeepSeek工具调用标签"""
 
-    OPEN_TAG = r"<(?:｜DSML｜|｜｜DSML｜｜)"
-    CLOSE_TAG = r"</(?:｜DSML｜|｜｜DSML｜｜)"
+    TAG_V3 = r"｜DSML｜"  # DeepSeek V3/R1 models
+    TAG_V4 = r"｜｜DSML｜｜"  # DeepSeek V4 models
+    UNION_TAG = rf"{TAG_V3}|{TAG_V4}"
+    UNION_OPEN = rf"<(?:{TAG_V3}|{TAG_V4})"
+    UNION_CLOSE = rf"</(?:{TAG_V3}|{TAG_V4})"
+    OPEN_TAG = rf"<(?:{TAG_V3}function_calls|{TAG_V4}tool_calls)"
+    CLOSE_TAG = rf"</(?:{TAG_V3}function_calls|{TAG_V4}tool_calls)"
 
     # 匹配整个DSML块
     DSML_BLOCK_PATTERN = re.compile(
-        rf"{OPEN_TAG}function_calls>(.*?){CLOSE_TAG}function_calls>",
+        rf"{OPEN_TAG}>(.*?){CLOSE_TAG}>",
         re.DOTALL,
     )
 
     # 匹配单个函数调用
     INVOKE_PATTERN = re.compile(
-        rf'{OPEN_TAG}invoke\s+name="([^"]+)">(.*?){CLOSE_TAG}invoke>',
+        rf'{UNION_OPEN}invoke\s+name="([^"]+)">(.*?){UNION_CLOSE}invoke>',
         re.DOTALL,
     )
 
     # 匹配参数
     PARAMETER_PATTERN = re.compile(
-        rf'{OPEN_TAG}parameter\s+name="([^"]+)"(?:\s+([^>]*))?>(.*?){CLOSE_TAG}parameter>',
+        rf'{UNION_OPEN}parameter\s+name="([^"]+)"(?:\s+([^>]*))?>(.*?){UNION_CLOSE}parameter>',
         re.DOTALL,
     )
 
@@ -157,7 +162,7 @@ class DSMLParser:
 
         for attr_match in cls.ATTR_PATTERN.finditer(attrs_text):
             attr_name = attr_match.group(1)
-            attr_value = attr_match.group(2)
+            attr_value = attr_match.group(2).strip()
             attrs[attr_name] = attr_value
 
             if attr_name == "type":
@@ -328,13 +333,13 @@ def example_print() -> None:
 
     更多文本内容。
 
-    <｜｜DSML｜｜function_calls>
+    <｜｜DSML｜｜tool_calls>
     <｜｜DSML｜｜invoke name="think_and_reason">
     <｜｜DSML｜｜parameter name="content" string="true">
     需要分析文档结构
     </｜｜DSML｜｜parameter>
     </｜｜DSML｜｜invoke>
-    </｜｜DSML｜｜function_calls>
+    </｜｜DSML｜｜tool_calls>
     """
 
     parser = DSMLParser()
