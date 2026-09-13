@@ -26,6 +26,17 @@ DSML（DeepSeek Markup Language）是 DeepSeek 模型内部用于描述 **Tool C
 </｜｜DSML｜｜tool_calls>
 ```
 
+## DeepSeek V4.1
+
+```xml
+<｜｜DSML｜｜ calls>
+<｜｜DSML｜｜ invoke name="a_plus_b">
+<｜｜DSML｜｜ parameter name="a" string="false">1</｜｜DSML｜｜ parameter>
+<｜｜DSML｜｜ parameter name="b" string="false">1</｜｜DSML｜｜ parameter>
+</｜｜DSML｜｜ invoke>
+</｜｜DSML｜｜ calls>
+```
+
 在正常情况下，这些标记会由模型运行时自动解析，最终用户**不会看到任何 DSML 内容**。
 
 然而，在消息链中断、工具调用流程异常、适配器未正确处理 Tool Calling，或直接与模型 API 交互等场景下，DeepSeek 可能会将这些底层标记直接输出给用户，不仅影响对话体验，也无法真正完成工具调用。

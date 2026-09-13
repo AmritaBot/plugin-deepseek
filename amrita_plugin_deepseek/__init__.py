@@ -11,7 +11,7 @@ __plugin_meta__ = PluginMetadata(
     type="library",
     homepage="https://github.com/AmritaBot/plugin-deepseek",
     supported_adapters={"~onebot.v11"},
-    config=config.Config
+    config=config.Config,
 )
 
 __all__ = ["config", "core"]

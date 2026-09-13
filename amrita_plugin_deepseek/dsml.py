@@ -46,32 +46,43 @@ class DSMLFunctionCall(BaseModel):
     raw_xml: str = ""  # 原始XML片段
 
 
+SPACE = " "
+
+
+class DSML_TAGS(str, Enum):
+    TAG_V3 = r"｜DSML｜"  # DeepSeek V3/3.1/3.2/R1 models
+    TAG_V4 = r"｜｜DSML｜｜"  # DeepSeek V4 Flash/Pro
+    TAG_V4_1 = rf"｜｜DSML｜｜{SPACE}"  # DeepSeek V4.1 Flash/Pro 注意：末尾有空格
+    V3_CHUNK = rf"{TAG_V3}function_calls"
+    V4_CHUNK = rf"{TAG_V4}tool_calls"
+    V4_1_CHUNK = rf"{TAG_V4_1}calls"
+
+    UNION_TAG = "|".join([TAG_V3, TAG_V4, TAG_V4_1])
+    UNION_CHUNK = "|".join([V3_CHUNK, V4_CHUNK, V4_1_CHUNK])
+    UNION_OPEN = rf"<(?:{UNION_TAG})"
+    UNION_CLOSE = rf"</(?:{UNION_TAG})"
+    OPEN_TAG = rf"<(?:{UNION_CHUNK})"
+    CLOSE_TAG = rf"</(?:{UNION_CHUNK})"
+
+
 class DSMLParser:
     """DSML解析器 - 处理DeepSeek工具调用标签"""
 
-    TAG_V3 = r"｜DSML｜"  # DeepSeek V3/R1 models
-    TAG_V4 = r"｜｜DSML｜｜"  # DeepSeek V4 models
-    UNION_TAG = rf"{TAG_V3}|{TAG_V4}"
-    UNION_OPEN = rf"<(?:{TAG_V3}|{TAG_V4})"
-    UNION_CLOSE = rf"</(?:{TAG_V3}|{TAG_V4})"
-    OPEN_TAG = rf"<(?:{TAG_V3}function_calls|{TAG_V4}tool_calls)"
-    CLOSE_TAG = rf"</(?:{TAG_V3}function_calls|{TAG_V4}tool_calls)"
-
     # 匹配整个DSML块
     DSML_BLOCK_PATTERN = re.compile(
-        rf"{OPEN_TAG}>(.*?){CLOSE_TAG}>",
+        rf"{DSML_TAGS.OPEN_TAG}>(.*?){DSML_TAGS.CLOSE_TAG}>",
         re.DOTALL,
     )
 
     # 匹配单个函数调用
     INVOKE_PATTERN = re.compile(
-        rf'{UNION_OPEN}invoke\s+name="([^"]+)">(.*?){UNION_CLOSE}invoke>',
+        rf'{DSML_TAGS.UNION_OPEN}invoke\s+name="([^"]+)">(.*?){DSML_TAGS.UNION_CLOSE}invoke>',
         re.DOTALL,
     )
 
     # 匹配参数
     PARAMETER_PATTERN = re.compile(
-        rf'{UNION_OPEN}parameter\s+name="([^"]+)"(?:\s+([^>]*))?>(.*?){UNION_CLOSE}parameter>',
+        rf'{DSML_TAGS.UNION_OPEN}parameter\s+name="([^"]+)"(?:\s+([^>]*))?>(.*?){DSML_TAGS.UNION_CLOSE}parameter>',
         re.DOTALL,
     )
 
@@ -320,13 +331,13 @@ class DSMLParser:
 
 
 def example_print() -> None:
-    # 示例文本（包含DSML和普通文本）
+    # 冒烟测试
     sample_text = sample_text = """
     这是普通文本。
 
     <｜DSML｜function_calls>
     <｜DSML｜invoke name="webscraper">
-    <｜DSML｜parameter name="url" string="true">https://amrita.suggar.top/docs</｜DSML｜parameter>
+    <｜DSML｜parameter name="url" string="true">https://bot.amritabot.com/docs</｜DSML｜parameter>
     <｜DSML｜parameter name="depth" type="number">2</｜DSML｜parameter>
     </｜DSML｜invoke>
     </｜DSML｜function_calls>
@@ -340,7 +351,17 @@ def example_print() -> None:
     </｜｜DSML｜｜parameter>
     </｜｜DSML｜｜invoke>
     </｜｜DSML｜｜tool_calls>
+
+    V4.1
+    <｜｜DSML｜｜ calls>
+    <｜｜DSML｜｜ invoke name="a_plus_b">
+    <｜｜DSML｜｜ parameter name="a" string="false">1</｜｜DSML｜｜ parameter>
+    <｜｜DSML｜｜ parameter name="b" string="false">1</｜｜DSML｜｜ parameter>
+    </｜｜DSML｜｜ invoke>
+    </｜｜DSML｜｜ calls>
     """
+    for k, v in DSML_TAGS.__members__.items():
+        print(f"{k}: '{v}'")
 
     parser = DSMLParser()
 
