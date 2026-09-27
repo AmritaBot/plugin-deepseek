@@ -1,6 +1,6 @@
 # amrita_plugin_deepseek
 
-`amrita_plugin_deepseek` 是 Amrita 框架官方提供的 DeepSeek 模型扩展，用于**解析、拦截并安全执行 DeepSeek DSML（DeepSeek Markup Language）工具调用**。
+`amrita_plugin_deepseek` 是 Amrita 框架官方提供的 DeepSeek 模型安全扩展，用于**解析、拦截并安全执行 DeepSeek DSML（DeepSeek Markup Language）工具调用**。
 
 ## 什么是 DSML？
 

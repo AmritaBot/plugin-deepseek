@@ -335,6 +335,7 @@ def example_print() -> None:
     sample_text = sample_text = """
     这是普通文本。
 
+    --V3/V3.1/V3.2家族--
     <｜DSML｜function_calls>
     <｜DSML｜invoke name="webscraper">
     <｜DSML｜parameter name="url" string="true">https://bot.amritabot.com/docs</｜DSML｜parameter>
@@ -342,8 +343,8 @@ def example_print() -> None:
     </｜DSML｜invoke>
     </｜DSML｜function_calls>
 
-    更多文本内容。
 
+    --V4家族--
     <｜｜DSML｜｜tool_calls>
     <｜｜DSML｜｜invoke name="think_and_reason">
     <｜｜DSML｜｜parameter name="content" string="true">
@@ -352,7 +353,7 @@ def example_print() -> None:
     </｜｜DSML｜｜invoke>
     </｜｜DSML｜｜tool_calls>
 
-    V4.1
+    --V4.1家族--
     <｜｜DSML｜｜ calls>
     <｜｜DSML｜｜ invoke name="a_plus_b">
     <｜｜DSML｜｜ parameter name="a" string="false">1</｜｜DSML｜｜ parameter>

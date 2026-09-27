@@ -7,6 +7,7 @@ from amrita.plugins.chat.config import config_manager
 from amrita_core import (
     CompletionEvent,
     PreCompletionEvent,
+    TextContent,
     ToolsManager,
     on_completion,
     on_precompletion,
@@ -41,7 +42,15 @@ async def security_check(event: PreCompletionEvent, nonebot_event: MessageEvent)
     if Checker.check_by_rule(
         event.message.user_query
         if isinstance(event.message.user_query, str)
-        else event.message.user_query.content
+        else (
+            event.message.user_query.content
+            if isinstance(event.message.user_query.content, str)
+            else "".join(
+                i.text
+                for i in event.message.user_query.content
+                if isinstance(i, TextContent)
+            )
+        )
     ):
         logger.warning(
             "User query contains potentially harmful content, which is not allowed for security reasons."
