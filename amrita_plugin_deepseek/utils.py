@@ -1,16 +1,39 @@
+import re
 from enum import Enum
 from functools import lru_cache
 
-from amrita_core.base.tokenizer import TokenizerManager
+import jieba
 
 from .config import CONFIG
+
+_WORD_PATTERN = re.compile(r"\w+|[^\w\s]")
+
+
+def _is_ascii(text: str) -> bool:
+    """判断片段是否全为 ASCII 字符。"""
+    return all(ord(c) < 128 for c in text)
+
+
+def _tokenize(text: str) -> list[str]:
+    """分词，复刻 AmritaCore 1.0 之前 ``JiebaTokenizer`` 的 ``bpe`` 模式。
+
+    ASCII 片段按空白切分，含中文的片段交给 jieba，不做截断。
+    """
+    tokens: list[str] = []
+    for chunk in _WORD_PATTERN.findall(text):
+        if chunk.strip() == "":
+            continue
+        if _is_ascii(chunk):
+            tokens.extend(chunk.split())
+        else:
+            tokens.extend(jieba.lcut(chunk))
+    return tokens
 
 
 @lru_cache(maxsize=2048)
 def fast_cut(text: str) -> set[str]:
     """粗略地快速分词，返回一个包含所有词语的集合"""
-    tokenzier = TokenizerManager().get_tokenizer("jieba")
-    return set(tokenzier(1200000).tokenize(text))
+    return set(_tokenize(text))
 
 
 def minhash(set1: set[str], set2: set[str]) -> float:
